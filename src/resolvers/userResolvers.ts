@@ -1,5 +1,5 @@
 import { create } from "domain";
-import {User} from "./types"
+import {User} from "../types/types"
 import {v4 as uuidv4} from "uuid";
 
 let users: User[] = [];
