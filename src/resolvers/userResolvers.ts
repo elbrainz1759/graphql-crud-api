@@ -4,7 +4,7 @@ import {v4 as uuidv4} from "uuid";
 
 let users: User[] = [];
 
-export const root = {
+export const userResolvers = {
     // The `getUser` function retrieves a user by their ID.
     // It takes an object with an `id` property and returns the corresponding User object.
     // If the user is not found, it returns undefined.

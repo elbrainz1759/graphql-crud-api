@@ -2,28 +2,30 @@
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
 import { userSchema } from './src/schemas/userSchema';
-import {root} from './src/resolvers/userResolvers';
+import {userResolvers} from './src/resolvers/userResolvers';
 import { schoolSchema } from './src/schemas/schoolSchema';
 import { countrySchema } from './src/schemas/countrySchema';
+import { schoolResolvers } from './src/resolvers/schoolResolvers';
+import { countryResolvers } from './src/resolvers/countryResolvers';
 
 const app = express();
 
 
 app.use('/user', graphqlHTTP({
     schema: userSchema,
-    rootValue: root,
+    rootValue: userResolvers,
     graphiql: true, // Enable GraphiQL interface
 }));
 
 app.use('/school', graphqlHTTP({
     schema: schoolSchema,
-    rootValue: root,
+    rootValue: schoolResolvers,
     graphiql: true, // Enable GraphiQL interface
 }));
 
 app.use('/country', graphqlHTTP({
     schema: countrySchema,
-    rootValue: root,
+    rootValue: countryResolvers,
     graphiql: true, // Enable GraphiQL interface
 }));
 
