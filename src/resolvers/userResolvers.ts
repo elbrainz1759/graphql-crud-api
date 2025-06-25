@@ -28,8 +28,6 @@ export const userResolvers = {
         users.push(newUser);
         return newUser;
     },
-// The `updateUser` function allows updating a user's name and/or email by their ID.
-    // If the user is not found, it returns null.
     updateUser: ({ id, name, email }: { id: string; name?: string; email?: string }) => {
         const user = users.find(user => user.id === id);
         if (!user) return null;
