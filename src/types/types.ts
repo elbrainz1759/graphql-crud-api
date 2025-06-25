@@ -19,3 +19,22 @@ export interface Country {
 	name: string;
 	code: string;
 }
+
+export interface State {
+	id: string;
+	name: string;
+	countryId: string;
+}
+
+export interface Roles {
+	id: string;
+	name: string;
+	description: string;
+	permissions: string[];
+}
+export interface Permission {
+	id: string;
+	name: string;
+	description: string;
+}
+
