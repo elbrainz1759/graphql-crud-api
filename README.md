@@ -18,9 +18,9 @@ This is a simple GraphQL CRUD API built with Node.js, Express, and TypeScript. B
 
 ```
 src/
-├── schema.ts       # GraphQL schema definition
-├── resolvers.ts    # CRUD resolver functions
-└── types.ts        # Type definitions (User interface)
+├── schemas/       # GraphQL schema definition
+├── resolvers/    # CRUD resolver functions
+└── types/        # Type definitions (User interface)
 
 index.ts            #Express server setup
 ```
