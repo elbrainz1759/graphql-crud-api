@@ -14,7 +14,9 @@ export const roleResolvers = {
       id: uuidv4(),
       name,
       description,
-      permissions
+      permissions,
+        createdAt: new Date().toISOString(),
+        createdBy: "system" // This can be modified to include the actual creator's ID
     };
     roles.push(newRole);
     return newRole;

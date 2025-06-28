@@ -10,7 +10,8 @@ export const permissionResolvers = {
   getPermissions: (): Permission[] => permissions,
 
   createPermission: ({ name, description }: Omit<Permission, "id">): Permission => {
-    const newPermission: Permission = { id: uuidv4(), name, description };
+    const newPermission: Permission = { id: uuidv4(), name, description , createdAt: new Date().toISOString(), createdBy: "system" // This can be modified to include the actual creator's ID
+    };
     permissions.push(newPermission);
     return newPermission;
   },

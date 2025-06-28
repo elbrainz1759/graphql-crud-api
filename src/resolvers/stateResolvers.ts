@@ -13,7 +13,9 @@ export const stateResolvers = {
     const newState: State = {
       id: uuidv4(),
       name,
-      countryId
+      countryId,
+      createdAt: new Date().toISOString(),
+      createdBy: "system" // This can be modified to include the actual creator's ID    
     };
     states.push(newState);
     return newState;
