@@ -2,6 +2,8 @@ export interface User {
 	id:string;
 	name: string;
 	email: string
+	createdAt: string;
+	createdBy: string;
 }
 
 export interface School {
@@ -12,18 +14,27 @@ export interface School {
 	phone: string;
 	website: string;
 	state: string;
+		createdAt: string;
+	createdBy: string;
+
 }
 
 export interface Country {
 	id: string;
 	name: string;
 	code: string;
+		createdAt: string;
+	createdBy: string;
+
 }
 
 export interface State {
 	id: string;
 	name: string;
 	countryId: string;
+		createdAt: string;
+	createdBy: string;
+
 }
 
 export interface Roles {
@@ -31,10 +42,16 @@ export interface Roles {
 	name: string;
 	description: string;
 	permissions: string[];
+		createdAt: string;
+	createdBy: string;
+
 }
 export interface Permission {
 	id: string;
 	name: string;
 	description: string;
+		createdAt: string;
+	createdBy: string;
+
 }
 
