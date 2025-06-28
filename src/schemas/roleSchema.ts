@@ -6,6 +6,8 @@ export const roleSchema = buildSchema(`
     name: String!
     description: String!
     permissions: [String!]!
+    createdAt: String!
+    createdBy: String!
   }
 
   type Query {
@@ -14,7 +16,7 @@ export const roleSchema = buildSchema(`
   }
 
   type Mutation {
-    createRole(name: String!, description: String!, permissions: [String!]!): Roles
+    createRole(name: String!, description: String!, permissions: [String!]!, createdBy: String!, createdAt: String!): Roles
     updateRole(id: ID!, name: String, description: String, permissions: [String!]): Roles
     deleteRole(id: ID!): Roles
   }

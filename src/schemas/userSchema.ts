@@ -5,6 +5,8 @@ export const userSchema = buildSchema(`
     id: ID!
     name: String!
     email: String!
+    createdAt: String!
+    createdBy: String!
   }
 
   type Query {
@@ -12,7 +14,7 @@ export const userSchema = buildSchema(`
     getUsers: [User!]!
     }
   type Mutation {
-    createUser(name: String!, email: String!): User
+    createUser(name: String!, email: String!, createdBy: String, createdAt: String!): User
     updateUser(id: ID!, name: String, email: String): User
     deleteUser(id: ID!): User
   }

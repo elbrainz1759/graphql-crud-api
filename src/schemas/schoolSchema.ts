@@ -9,6 +9,8 @@ export const schoolSchema = buildSchema(`
     phone: String!
     website: String!
     state: String!
+    createdAt: String!
+    createdBy: String!
   }
 
   type Query {
@@ -24,6 +26,8 @@ export const schoolSchema = buildSchema(`
       phone: String!
       website: String!
       state: String!
+      createdBy: String!
+      createdAt: String!
     ): School
 
     updateSchool(

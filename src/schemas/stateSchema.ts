@@ -5,6 +5,8 @@ export const stateSchema = buildSchema(`
     id: ID!
     name: String!
     countryId: String!
+    createdAt: String!
+    createdBy: String!
   }
 
   type Query {
@@ -13,7 +15,7 @@ export const stateSchema = buildSchema(`
   }
 
   type Mutation {
-    createState(name: String!, countryId: String!): State
+    createState(name: String!, countryId: String!, createdBy: String!, createdAt: String!): State
     updateState(id: ID!, name: String, countryId: String): State
     deleteState(id: ID!): State
   }

@@ -5,6 +5,9 @@ export const permissionSchema = buildSchema(`
     id: ID!
     name: String!
     description: String!
+    createdAt: String!
+    createdBy: String!
+
   }
 
   type Query {
@@ -13,7 +16,7 @@ export const permissionSchema = buildSchema(`
   }
 
   type Mutation {
-    createPermission(name: String!, description: String!): Permission
+    createPermission(name: String!, description: String!, createdBy: String!, createdAt: String!): Permission
     updatePermission(id: ID!, name: String, description: String): Permission
     deletePermission(id: ID!): Permission
   }
