@@ -8,24 +8,24 @@ let countries: Country[] = sampleData.countries || [];
 
 export const schoolResolvers = {
   Query: {
-    getSchool: (_: any, { id }: { id: string }): School | undefined => {
-      return schools.find(s => s.id === id);
+    getSchool: (_: any, { id }: { id: string }, context: any): School | undefined => {
+      return context.schools.find((s: any) => s.id === id);
     },
 
-    getSchools: (): School[] => {
-      return schools;
+    getSchools: (_: any, __: any, context: any): School[] => {
+      return context.schools;
     },
 
-    getSchoolsByState: (_: any, { state }: { state: string }): School[] => {
-      return schools.filter(s => s.state === state);
+    getSchoolsByState: (_: any, { state }: { state: string }, context: any): School[] => {
+      return context.schools.filter((s: any) => s.state === state);
     },
 
-    getSchoolsByCountry: (_: any, { country }: { country: string }): School[] => {
-      return schools.filter(s => s.country === country);
+    getSchoolsByCountry: (_: any, { country }: { country: string }, context: any): School[] => {
+      return context.schools.filter((s: any) => s.country === country);
     },
 
-    getSchoolsByCreatedBy: (_: any, { createdBy }: { createdBy: string }): School[] => {
-      return schools.filter(s => s.createdBy === createdBy);
+    getSchoolsByCreatedBy: (_: any, { createdBy }: { createdBy: string }, context: any): School[] => {
+      return context.schools.filter((s: any) => s.createdBy === createdBy);
     }
   },
 

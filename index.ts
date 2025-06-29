@@ -13,6 +13,7 @@ import { schoolResolvers } from './src/resolvers/schoolResolvers';
 import { stateResolvers } from './src/resolvers/stateResolvers';
 import { roleResolvers } from './src/resolvers/roleResolvers';
 import { userResolvers } from './src/resolvers/userResolvers';
+import sampleData from './db';
 
 const typeDefs = [
   countryType,
@@ -36,7 +37,16 @@ const app = express();
 
 app.use('/graphql', graphqlHTTP({
   schema,
-  graphiql: true
+  graphiql: true,
+  context: {
+    // You can add any context you need here, such as database connections or authentication info
+    schools: sampleData.schools || [],
+    users: sampleData.users || [],
+    states: sampleData.states || [],
+    countries: sampleData.countries || [],
+    roles: sampleData.roles || [],
+    permissions: sampleData.permissions || []
+  }
 }));
 
 app.get('/', (req, res) => {
