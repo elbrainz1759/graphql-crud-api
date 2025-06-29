@@ -7,6 +7,11 @@ import { schoolSchema } from './src/schemas/schoolSchema';
 import { countrySchema } from './src/schemas/countrySchema';
 import { schoolResolvers } from './src/resolvers/schoolResolvers';
 import { countryResolvers } from './src/resolvers/countryResolvers';
+import { roleSchema } from './src/schemas/roleSchema';
+import { roleResolvers } from './src/resolvers/roleResolvers';
+import { stateResolvers } from './src/resolvers/stateResolvers';
+import { stateSchema } from './src/schemas/stateSchema';
+
 
 const app = express();
 
@@ -26,6 +31,18 @@ app.use('/school', graphqlHTTP({
 app.use('/country', graphqlHTTP({
     schema: countrySchema,
     rootValue: countryResolvers,
+    graphiql: true, // Enable GraphiQL interface
+}));
+
+app.use("state", graphqlHTTP({
+    schema: stateSchema, // Assuming you have a stateSchema similar to schoolSchema
+    rootValue: stateResolvers, // Assuming you have stateResolvers similar to schoolResolvers
+    graphiql: true, // Enable GraphiQL interface
+}));
+
+app.use("role", graphqlHTTP({
+    schema: roleSchema, // Assuming you have a roleSchema similar to schoolSchema
+    rootValue: roleResolvers, // Assuming you have roleResolvers similar to schoolResolvers
     graphiql: true, // Enable GraphiQL interface
 }));
 

@@ -23,7 +23,9 @@ export const userResolvers = {
         const newUser: User = {
             id: uuidv4(),
             name,
-            email
+            email,
+            createdAt: new Date().toISOString(),
+            createdBy: "system" // This can be modified to include the actual creator's ID
         };
         users.push(newUser);
         return newUser;
