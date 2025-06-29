@@ -1,7 +1,8 @@
+import sampleData from "../../db";
 import { Permission } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 
-let permissions: Permission[] = [];
+let permissions: Permission[] = sampleData.permissions || [];
 
 export const permissionResolvers = {
   getPermission: ({ id }: { id: string }): Permission | undefined =>

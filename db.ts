@@ -1,9 +1,13 @@
+const now = new Date().toISOString();
+
 const sampleData = {
   users: [
     {
       id: "u1",
       name: "Jeremiah Ageh",
-      email: "jeremiah@example.com"
+      email: "jeremiah@example.com",
+      createdAt: now,
+      createdBy: "system"
     }
   ],
 
@@ -11,7 +15,9 @@ const sampleData = {
     {
       id: "c1",
       name: "Nigeria",
-      code: "NG"
+      code: "NG",
+      createdAt: now,
+      createdBy: "system"
     }
   ],
 
@@ -19,7 +25,9 @@ const sampleData = {
     {
       id: "st1",
       name: "FCT",
-      countryId: "c1"
+      countryId: "c1",
+      createdAt: now,
+      createdBy: "system"
     }
   ],
 
@@ -31,7 +39,9 @@ const sampleData = {
       country: "c1",
       phone: "+2348123456789",
       website: "https://fgc.edu.ng",
-      state: "st1"
+      state: "st1",
+      createdAt: now,
+      createdBy: "system"
     }
   ],
 
@@ -39,7 +49,9 @@ const sampleData = {
     {
       id: "p1",
       name: "View Users",
-      description: "Allows viewing the list of users"
+      description: "Allows viewing the list of users",
+      createdAt: now,
+      createdBy: "system"
     }
   ],
 
@@ -48,7 +60,9 @@ const sampleData = {
       id: "r1",
       name: "Admin",
       description: "Full system access",
-      permissions: ["p1"]
+      permissions: ["p1"],
+      createdAt: now,
+      createdBy: "system"
     }
   ]
 };

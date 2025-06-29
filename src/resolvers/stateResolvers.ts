@@ -1,7 +1,8 @@
+import sampleData from "../../db";
 import { State } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 
-let states: State[] = [];
+let states: State[] = sampleData.states || [];
 
 export const stateResolvers = {
   getState: ({ id }: { id: string }): State | undefined =>

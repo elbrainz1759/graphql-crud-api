@@ -1,8 +1,9 @@
 import { create } from "domain";
 import {User} from "../types/types"
 import {v4 as uuidv4} from "uuid";
+import sampleData from "../../db";
 
-let users: User[] = [];
+let users: User[] = sampleData.users || [];
 
 export const userResolvers = {
     // The `getUser` function retrieves a user by their ID.

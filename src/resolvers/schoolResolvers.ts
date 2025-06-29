@@ -1,7 +1,8 @@
+import sampleData from "../../db";
 import { School } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 
-let schools: School[] = [];
+let schools: School[] = sampleData.schools || [];
 
 export const schoolResolvers = {
   // Get a school by ID
@@ -21,7 +22,7 @@ export const schoolResolvers = {
     country,
     phone,
     website,
-    state,
+    state
   }: Omit<School, "id">): School => {
     const newSchool: School = {
       id: uuidv4(),
@@ -31,6 +32,8 @@ export const schoolResolvers = {
       phone,
       website,
       state,
+      createdAt: new Date().toISOString(),
+      createdBy: "system", // This can be modified to include the actual creator's ID
     };
     schools.push(newSchool);
     return newSchool;

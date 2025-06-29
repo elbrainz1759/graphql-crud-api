@@ -1,7 +1,8 @@
+import sampleData from "../../db";
 import { Country } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 
-let countries: Country[] = [];
+let countries: Country[] = sampleData.countries || [];
 
 export const countryResolvers = {
   // Get a single country by ID
@@ -19,7 +20,9 @@ export const countryResolvers = {
     const newCountry: Country = {
       id: uuidv4(),
       name,
-      code
+      code,
+      createdAt: new Date().toISOString(),
+      createdBy: "system" // This can be modified to include the actual creator's ID
     };
     countries.push(newCountry);
     return newCountry;

@@ -1,7 +1,8 @@
+import sampleData from "../../db";
 import { Roles } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 
-let roles: Roles[] = [];
+let roles: Roles[] = sampleData.roles || [];
 
 export const roleResolvers = {
   getRole: ({ id }: { id: string }): Roles | undefined =>
