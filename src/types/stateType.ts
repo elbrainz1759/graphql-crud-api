@@ -1,6 +1,5 @@
-import { buildSchema } from "graphql";
 
-export const stateSchema = buildSchema(`
+export const stateType = `
   type State {
     id: ID!
     name: String!
@@ -19,4 +18,10 @@ export const stateSchema = buildSchema(`
     updateState(id: ID!, name: String, countryId: String): State
     deleteState(id: ID!): State
   }
-`);
+
+input StateInput {
+    id: ID!
+  }
+`;
+
+

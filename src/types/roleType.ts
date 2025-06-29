@@ -1,6 +1,5 @@
-import { buildSchema } from "graphql";
 
-export const roleSchema = buildSchema(`
+export const roleType = `
   type Roles {
     id: ID!
     name: String!
@@ -20,4 +19,4 @@ export const roleSchema = buildSchema(`
     updateRole(id: ID!, name: String, description: String, permissions: [String!]): Roles
     deleteRole(id: ID!): Roles
   }
-`);
+`;

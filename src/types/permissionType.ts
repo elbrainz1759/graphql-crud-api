@@ -1,6 +1,5 @@
-import { buildSchema } from "graphql";
 
-export const permissionSchema = buildSchema(`
+export const permissionType = `
   type Permission {
     id: ID!
     name: String!
@@ -20,4 +19,4 @@ export const permissionSchema = buildSchema(`
     updatePermission(id: ID!, name: String, description: String): Permission
     deletePermission(id: ID!): Permission
   }
-`);
+`;

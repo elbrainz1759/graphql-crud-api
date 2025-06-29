@@ -1,6 +1,5 @@
-import { buildSchema } from "graphql";
 
-export const userSchema = buildSchema(`
+export const userType = `
   type User {
     id: ID!
     name: String!
@@ -18,4 +17,4 @@ export const userSchema = buildSchema(`
     updateUser(id: ID!, name: String, email: String): User
     deleteUser(id: ID!): User
   }
-`);
+`;

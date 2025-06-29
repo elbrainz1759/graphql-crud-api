@@ -1,6 +1,5 @@
-import { buildSchema } from "graphql";
 
-export const countrySchema = buildSchema(`
+export const countryType = `
   type Country {
     id: ID!
     name: String!
@@ -28,4 +27,10 @@ export const countrySchema = buildSchema(`
     ): Country
     deleteCountry(id: ID!): Country
   }
-`);
+
+  input CountryInput {
+    id: ID!
+  }
+`;
+
+
