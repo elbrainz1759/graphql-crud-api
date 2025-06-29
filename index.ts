@@ -34,13 +34,13 @@ app.use('/country', graphqlHTTP({
     graphiql: true, // Enable GraphiQL interface
 }));
 
-app.use("state", graphqlHTTP({
+app.use("/state", graphqlHTTP({
     schema: stateSchema, // Assuming you have a stateSchema similar to schoolSchema
     rootValue: stateResolvers, // Assuming you have stateResolvers similar to schoolResolvers
     graphiql: true, // Enable GraphiQL interface
 }));
 
-app.use("role", graphqlHTTP({
+app.use("/role", graphqlHTTP({
     schema: roleSchema, // Assuming you have a roleSchema similar to schoolSchema
     rootValue: roleResolvers, // Assuming you have roleResolvers similar to schoolResolvers
     graphiql: true, // Enable GraphiQL interface
