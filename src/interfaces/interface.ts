@@ -4,6 +4,8 @@ export interface User {
 	email: string
 	createdAt: string;
 	createdBy: string;
+	password?: string;
+	role?: "user" | "admin" | "superAdmin";
 }
 
 export interface School {

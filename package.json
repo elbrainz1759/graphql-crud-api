@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@graphql-tools/schema": "^10.0.23",
+    "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "express": "^5.1.0",
     "express-graphql": "^0.12.0",
@@ -22,6 +23,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.3",
     "@types/graphql": "^14.5.0",
     "@types/jest": "^30.0.0",

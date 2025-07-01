@@ -1,7 +1,7 @@
-import { Request } from "express";
 import { getLoggedInUser, User } from "./isLoggedIn";
+import { IncomingMessage } from "http";
 
-export function requireAdmin(req: Request): User | null {
+export function requireAdmin(req: IncomingMessage): User | null {
   const user = getLoggedInUser(req);
 
   if (!user) {

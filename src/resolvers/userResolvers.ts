@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { User } from "../interfaces/interface"
 import { v4 as uuidv4 } from "uuid";
 import sampleData from "../../db";
@@ -6,30 +7,62 @@ let users: User[] = sampleData.users || [];
 
 export const userResolvers = {
     Query: {
-        getUser: ({ id }: { id: string }) => {
+        getUser: async ({ id }: { id: string }) => {
             return users.find(user => user.id === id);
         },
-        getUsers: () => {
+        getUsers: async () => {
             return users;
         },
     },
     Mutation: {
-        createUser: ({ name, email }: { name: string; email: string }) => {
+        createUser: async ({ name, email, role, password }: { name: string; email: string; role: string; password: string }) => {
+            if (!name || !email || !password || !role) {
+                console.log("All fields (name, email, password, role) are required");
+                return null;
+            }
+            if (!["user", "admin", "superAdmin"].includes(role)) {
+                console.log("Invalid role specified");
+                return null;
+            }
+            // Check if user already exists
+            const existingUser = users.find(user => user.email === email);
+            if (existingUser) {
+                console.log("User with this email already exists");
+                return null;
+            }
+
+            // Password hashing using bcrypt
+            const hashedPassword = await bcrypt.hash(password, 10); 
+
             const newUser: User = {
                 id: uuidv4(),
                 name,
                 email,
+                password: hashedPassword,
+                role: role as "user" | "admin" | "superAdmin",
                 createdAt: new Date().toISOString(),
                 createdBy: "system" // This can be modified to include the actual creator's ID
             };
             users.push(newUser);
             return newUser;
         },
-        updateUser: ({ id, name, email }: { id: string; name?: string; email?: string }) => {
-            const user = users.find(user => user.id === id);
+        updateUser: ({ id, name, email, role }: { id: string; name?: string; email?: string; role?: string }) => {
+            let user = users.find(user => user.id === id);
+
             if (!user) return null;
+
+            if (!name && !email && !role) {
+                console.log("At least one field (name, email, role) must be provided for update");
+                return user // Return the user without changes if no fields are provided
+            }
+            if (role && !["user", "admin", "superAdmin"].includes(role)) {
+                console.log("Invalid role specified");
+                return user;
+            }
+
             if (name) user.name = name;
             if (email) user.email = email;
+            if (role) user.role = role as "user" | "admin" | "superAdmin";
             return user;
         },
         deleteUser: ({ id }: { id: string }) => {

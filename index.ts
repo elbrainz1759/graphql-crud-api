@@ -17,21 +17,25 @@ import { roleResolvers } from './src/resolvers/roleResolvers';
 import { userResolvers } from './src/resolvers/userResolvers';
 import sampleData from './db';
 import { getLoggedInUser } from './src/middleware/isLoggedIn';
+import { authType } from './src/types/auth';
+import { authResolvers } from './src/resolvers/authResolvers';
 
 const typeDefs = [
-  countryType,
-  schoolType,
-  stateType,
-  roleType,
-  userType
+    countryType,
+    schoolType,
+    stateType,
+    roleType,
+    userType,
+    authType
 ];
 
 const resolvers = [
-  countryResolvers,
-  schoolResolvers,
-  stateResolvers,
-  roleResolvers,
-  userResolvers
+    countryResolvers,
+    schoolResolvers,
+    stateResolvers,
+    roleResolvers,
+    userResolvers,
+    authResolvers
 ];
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
@@ -39,30 +43,30 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 const app = express();
 
 app.use("/graphql", graphqlHTTP(
-  (req: IncomingMessage, res: ServerResponse, params?: GraphQLParams) => {
-    const user = getLoggedInUser(req as Request);
+    (req: IncomingMessage, res: ServerResponse, params?: GraphQLParams) => {
+        const user = getLoggedInUser(req);
 
-    return {
-      schema,
-      graphiql: true,
-      context: {
-        user,
-        schools: sampleData.schools || [],
-        users: sampleData.users || [],
-        states: sampleData.states || [],
-        countries: sampleData.countries || [],
-        roles: sampleData.roles || [],
-        permissions: sampleData.permissions || [],
-      },
-    };
-  }
+        return {
+            schema,
+            graphiql: true,
+            context: {
+                user,
+                schools: sampleData.schools || [],
+                users: sampleData.users || [],
+                states: sampleData.states || [],
+                countries: sampleData.countries || [],
+                roles: sampleData.roles || [],
+                permissions: sampleData.permissions || [],
+            },
+        };
+    }
 ));
 
 app.get('/', (req, res) => {
-  res.send('Unified GraphQL API is running.');
+    res.send('Unified GraphQL API is running.');
 });
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/graphql`);
+    console.log(`Server running at http://localhost:${PORT}/graphql`);
 });

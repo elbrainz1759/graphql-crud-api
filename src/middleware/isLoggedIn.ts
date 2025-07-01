@@ -1,4 +1,4 @@
-import { Request } from "express";
+import { IncomingMessage } from "http";
 import jwt from "jsonwebtoken";
 
 export interface User {
@@ -8,7 +8,7 @@ export interface User {
   role: "user" | "admin" | "superAdmin";
 }
 
-export function getLoggedInUser(req: Request): User | null {
+export function getLoggedInUser(req: IncomingMessage): User | null {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     console.log("Unauthorized: No token provided");
