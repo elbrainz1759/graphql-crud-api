@@ -1,17 +1,17 @@
-import { Request, Response } from "express";
+import { Request } from "express";
 import jwt from "jsonwebtoken";
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
   role: "user" | "admin" | "superAdmin";
 }
 
-export function isLoggedIn(req: Request) {
+export function getLoggedInUser(req: Request): User | null {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
-    console.error("Unauthorized: No token provided");
+    console.log("Unauthorized: No token provided");
     return null;
   }
 
@@ -20,9 +20,7 @@ export function isLoggedIn(req: Request) {
     const user = jwt.verify(token, process.env.JWT_SECRET || "secret") as User;
     return user;
   } catch {
-    console.error("Unauthorized: Invalid token");
+    console.log("Unauthorized: Invalid token");
     return null;
   }
 }
-
-
