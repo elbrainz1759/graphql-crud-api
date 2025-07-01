@@ -1,6 +1,8 @@
 import express from 'express';
-import { graphqlHTTP } from 'express-graphql';
+import { Request, Response } from 'express';
+import { graphqlHTTP, GraphQLParams } from 'express-graphql';
 import { makeExecutableSchema } from '@graphql-tools/schema';
+import { IncomingMessage, ServerResponse } from "http";
 
 import { countryType } from './src/types/countryType';
 import { schoolType } from './src/types/schoolType';
@@ -14,6 +16,7 @@ import { stateResolvers } from './src/resolvers/stateResolvers';
 import { roleResolvers } from './src/resolvers/roleResolvers';
 import { userResolvers } from './src/resolvers/userResolvers';
 import sampleData from './db';
+import { getLoggedInUser } from './src/middleware/isLoggedIn';
 
 const typeDefs = [
   countryType,
@@ -35,19 +38,25 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const app = express();
 
-app.use('/graphql', graphqlHTTP({
-  schema,
-  graphiql: true,
-  context: {
-    // You can add any context you need here, such as database connections or authentication info
-    schools: sampleData.schools || [],
-    users: sampleData.users || [],
-    states: sampleData.states || [],
-    countries: sampleData.countries || [],
-    roles: sampleData.roles || [],
-    permissions: sampleData.permissions || []
+app.use("/graphql", graphqlHTTP(
+  (req: IncomingMessage, res: ServerResponse, params?: GraphQLParams) => {
+    const user = getLoggedInUser(req as Request);
+
+    return {
+      schema,
+      graphiql: true,
+      context: {
+        user,
+        schools: sampleData.schools || [],
+        users: sampleData.users || [],
+        states: sampleData.states || [],
+        countries: sampleData.countries || [],
+        roles: sampleData.roles || [],
+        permissions: sampleData.permissions || [],
+      },
+    };
   }
-}));
+));
 
 app.get('/', (req, res) => {
   res.send('Unified GraphQL API is running.');
