@@ -11,7 +11,7 @@ export interface User {
 export function getLoggedInUser(req: IncomingMessage): User | null {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
-    console.log("Unauthorized: No token provided");
+    console.log("Unauthorized: No token provided in request headers");
     return null;
   }
 
