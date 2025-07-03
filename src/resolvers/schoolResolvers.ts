@@ -23,14 +23,36 @@ export const schoolResolvers = {
     },
 
     getSchoolsByState: (_: any, { state }: { state: string }, context: any): School[] => {
+      if (!context.user) {
+        throw new Error("Unauthorized: Please log in.");
+      }
+      if (!states.some(s => s.id === state)) {
+        throw new Error(`State with ID ${state} does not exist.`);
+      }
       return context.schools.filter((s: any) => s.state === state);
     },
 
     getSchoolsByCountry: (_: any, { country }: { country: string }, context: any): School[] => {
+      if (!context.user) {
+        throw new Error("Unauthorized: Please log in.");
+      }
+      if (!countries.some(c => c.id === country)) {
+        throw new Error(`Country with ID ${country} does not exist.`);
+      }
       return context.schools.filter((s: any) => s.country === country);
     },
 
     getSchoolsByCreatedBy: (_: any, { createdBy }: { createdBy: string }, context: any): School[] => {
+      if (!context.user) {
+        throw new Error("Unauthorized: Please log in.");
+      }
+      if (!context.users.some((u: any) => u.id === createdBy)) {
+        throw new Error(`User with ID ${createdBy} does not exist.`);
+      }
+      // Filter schools by the creator's ID
+      if (!context.schools) {
+        throw new Error("No schools found in the context.");
+      }
       return context.schools.filter((s: any) => s.createdBy === createdBy);
     }
   },
