@@ -15,7 +15,12 @@ export const userResolvers = {
         },
     },
     Mutation: {
-        createUser: async ({ name, email, role, password }: { name: string; email: string; role: string; password: string }) => {
+        createUser: async ({ name, email, role, password }: { name: string; email: string; role: string; password: string }, context: any) => {
+            if (!context.user) {
+                console.log("Unauthorized: Please log in.");
+                return null;
+            }
+            // Validate input fields
             if (!name || !email || !password || !role) {
                 console.log("All fields (name, email, password, role) are required");
                 return null;
@@ -46,7 +51,15 @@ export const userResolvers = {
             users.push(newUser);
             return newUser;
         },
-        updateUser: ({ id, name, email, role }: { id: string; name?: string; email?: string; role?: string }) => {
+        updateUser: ({ id, name, email, role }: { id: string; name?: string; email?: string; role?: string }, context: any) => {
+            if (!context.user) {
+                console.log("Unauthorized: Please log in.");
+                return null;
+            }
+            if (!id) {
+                console.log("User ID is required for update.");
+                return null;
+            }
             let user = users.find(user => user.id === id);
 
             if (!user) return null;
@@ -65,7 +78,20 @@ export const userResolvers = {
             if (role) user.role = role as "user" | "admin" | "superAdmin";
             return user;
         },
-        deleteUser: ({ id }: { id: string }) => {
+        deleteUser: ({ id }: { id: string }, context: any) => {
+            if (!context.user) {
+                console.log("Unauthorized: Please log in.");
+                return null;
+            }
+            if (!id) {
+                console.log("User ID is required for deletion.");
+                return null;
+            }
+            if (!users.some(user => user.id === id)) {
+                console.log(`User with ID ${id} does not exist.`);
+                return null;
+            }
+            // Find the user by ID and remove them from the array
             const userIndex = users.findIndex(user => user.id === id);
             if (userIndex === -1) return null;
             const deletedUser = users[userIndex];
