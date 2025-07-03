@@ -9,10 +9,16 @@ let countries: Country[] = sampleData.countries || [];
 export const schoolResolvers = {
   Query: {
     getSchool: (_: any, { id }: { id: string }, context: any): School | undefined => {
+      if (!context.user) {
+        throw new Error("Unauthorized: Please log in.");
+      }
       return context.schools.find((s: any) => s.id === id);
     },
 
     getSchools: (_: any, __: any, context: any): School[] => {
+      if (!context.user) {
+        throw new Error("Unauthorized: Please log in.");
+      }
       return context.schools;
     },
 
