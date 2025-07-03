@@ -6,13 +6,31 @@ let roles: Roles[] = sampleData.roles || [];
 
 export const roleResolvers = {
     Query: {
-        getRole: ({ id }: { id: string }): Roles | undefined =>
-            roles.find(r => r.id === id),
+        getRole: ({ id }: { id: string }, context: any): Roles | undefined => {
+            if (!context.user) {
+                throw new Error("Unauthorized: Please log in.");
+            }
+            return roles.find(r => r.id === id);
+        },
 
-        getRoles: (): Roles[] => roles,
+        getRoles: (context: any): Roles[] => {
+            if (!context.user) {
+                throw new Error("Unauthorized: Please log in.");
+            }
+            return roles;
+        },
     },
     Mutation: {
-        createRole: ({ name, description, permissions }: Omit<Roles, "id">): Roles => {
+        createRole: ({ name, description, permissions }: Omit<Roles, "id">, context: any): Roles => {
+            if (!context.user) {
+                throw new Error("Unauthorized: Please log in.");
+            }
+            if (!name || !description || !permissions) {
+                throw new Error("Name, description, and permissions are required to create a role.");
+            }
+            if (roles.some(r => r.name === name)) {
+                throw new Error(`Role with name "${name}" already exists.`);
+            }
             const newRole: Roles = {
                 id: uuidv4(),
                 name,
@@ -30,7 +48,16 @@ export const roleResolvers = {
             name,
             description,
             permissions
-        }: Partial<Roles> & { id: string }): Roles | null => {
+        }: Partial<Roles> & { id: string }, context: any): Roles | null => {
+            if (!context.user) {
+                throw new Error("Unauthorized: Please log in.");
+            }
+            if (!id) {
+                throw new Error("Role ID is required for updating.");
+            }
+            if (!name && !description && !permissions) {
+                throw new Error("At least one of name, description, or permissions must be provided for updating a role.");
+            }
             const role = roles.find(r => r.id === id);
             if (!role) return null;
             if (name) role.name = name;
