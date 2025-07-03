@@ -11,6 +11,13 @@ export const permissionResolvers = {
             if (!context.user) {
                 throw new Error("Unauthorized: Please log in.");
             }
+            if (!id) {
+                throw new Error("Permission ID is required.");
+            }
+            if (!permissions) {
+                throw new Error("Permissions data is not available in the context.");
+            }
+            // Find and return the permission by ID
             return permissions.find(p => p.id === id);
         },
         getPermissions: (context: any): Permission[] => {
