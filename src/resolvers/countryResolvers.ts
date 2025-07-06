@@ -7,37 +7,47 @@ let countries: Country[] = sampleData.countries || [];
 export const countryResolvers = {
   // Get a single country by ID
 
-  Query:{
-    getCountry: (_: any, { id }: { id: string }, context: any): Country | undefined => {
+  Query: {
+    getCountry: async (_: any, { id }: { id: string }, context: any): Promise<Country | undefined> => {
       if (!id) {
         throw new Error("Country ID is required.");
       }
-      if (!context.countries) {
-        throw new Error("Countries data is not available in the context.");
-      }
-       if (!context.user) {
-    throw new Error("Unauthorized: Please log in.");
-  }
-      return context.countries.find((c: any) => c.id === id);
-    },
-    getCountries: (_: any, __: any, context: any): Country[] => {
       if (!context.user) {
         throw new Error("Unauthorized: Please log in.");
       }
-      return context.countries;
+      const [rows] = await context.db.query("SELECT * FROM countries WHERE id = ?", [id]);
+      if (rows.length === 0) {
+        throw new Error(`Country with ID ${id} does not exist.`);
+      }
+      // Find and return the country by ID
+      return rows[0];
+    },
+    getCountries: async (_: any, __: any, context: any): Promise<Country[]> => {
+      if (!context.user) {
+        throw new Error("Unauthorized: Please log in.");
+      }
+      const [rows] = context.db.query("SELECT * FROM countries");
+      if (rows.length === 0) {
+        throw new Error("No countries found.");
+      }
+      // Return all countries
+      return rows;
     }
   },
-  Mutation:{
-    createCountry: (_: any, { name, code }: { name: string; code: string }, context: any): Country => {
+  Mutation: {
+    createCountry: async (_: any, { name, code }: { name: string; code: string }, context: any): Promise<Country> => {
       if (!context.user) {
         throw new Error("Unauthorized: Please log in.");
       }
       if (!name || !code) {
         throw new Error("Name and code are required to create a country.");
       }
-      if (countries.some(c => c.name === name || c.code === code)) {
+      // Check if the country already exists
+      const [existingCountries] = await context.db.query("SELECT * FROM countries WHERE name = ? OR code = ?", [name, code]);
+      if (existingCountries.length > 0) {
         throw new Error(`Country with name "${name}" or code "${code}" already exists.`);
       }
+      // Create a new country object
       const newCountry: Country = {
         id: uuidv4(),
         name,
@@ -45,11 +55,19 @@ export const countryResolvers = {
         createdAt: new Date().toISOString(),
         createdBy: "system" // This can be modified to include the actual creator's ID
       };
-      countries.push(newCountry);
+      // Insert the new country into the database
+      await context.db.query("INSERT INTO countries (id, name, code, createdAt, createdBy) VALUES (?, ?, ?, ?, ?)", [
+        newCountry.id,
+        newCountry.name,
+        newCountry.code,
+        newCountry.createdAt,
+        newCountry.createdBy
+      ]);
+
       return newCountry;
     },
 
-    updateCountry: (_: any, { id, name, code }: { id: string; name?: string; code?: string }, context: any): Country | null => {
+    updateCountry: async(_: any, { id, name, code }: { id: string; name?: string; code?: string }, context: any): Promise<Country | null> => {
       if (!context.user) {
         throw new Error("Unauthorized: Please log in.");
       }
@@ -59,28 +77,42 @@ export const countryResolvers = {
       if (!name && !code) {
         throw new Error("At least one of name or code must be provided for updating a country.");
       }
-      const country = countries.find(c => c.id === id);
-      if (!country) return null;
-      if (name) country.name = name;
-      if (code) country.code = code;
-      return country;
+      // Check if the country exists
+      const [existingCountries] = await context.db.query("SELECT * FROM countries WHERE id = ?", [id]);
+      if (existingCountries.length === 0) {
+        throw new Error(`Country with ID ${id} does not exist.`);
+      }
+      // Update the country in the database
+      const update = await context.db.query("UPDATE countries SET name = ?, code = ? WHERE id = ?", [name, code, id]);
+      
+      if (update.affectedRows === 0) {
+        throw new Error(`Failed to update country with ID ${id}.`);
+      }
+      // Return Successfully updated country
+      return {
+        id,
+        name: name || existingCountries[0].name,
+        code: code || existingCountries[0].code,
+        createdAt: existingCountries[0].createdAt,
+        createdBy: existingCountries[0].createdBy
+      };
     },
 
-    deleteCountry: (_: any, { id }: { id: string }, context: any): Country | null => {
+    deleteCountry: async(_: any, { id }: { id: string }, context: any): Promise<Country | null> => {
       if (!context.user) {
         throw new Error("Unauthorized: Please log in.");
       }
       if (!id) {
         throw new Error("Country ID is required for deletion.");
       }
-      if (!countries.some(c => c.id === id)) {
-        throw new Error(`Country with ID ${id} does not exist.`);
+      // Check if the country exists
+      const [existingCountries] = await context.db.query("SELECT * FROM countries WHERE id = ?", [id]);
+      if (existingCountries.length === 0) { 
+        throw new Error(`Country with ID ${id} does not exist.`);   
       }
-      const index = countries.findIndex(c => c.id === id);
-      if (index === -1) return null;
-      const deleted = countries[index];
-      countries.splice(index, 1);
-      return deleted;
+      // Delete the country from the database
+      await context.db.query("DELETE FROM countries WHERE id = ?", [id]);
+      return existingCountries[0];
     }
   }
 };
