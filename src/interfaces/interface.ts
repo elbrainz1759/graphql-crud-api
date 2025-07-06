@@ -25,7 +25,7 @@ export interface Country {
 	id: string;
 	name: string;
 	code: string;
-		createdAt: string;
+		createdAt: Date;
 	createdBy: string;
 
 }

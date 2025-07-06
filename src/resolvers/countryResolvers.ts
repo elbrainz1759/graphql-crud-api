@@ -2,7 +2,6 @@ import sampleData from "../../db";
 import { Country } from "../interfaces/interface";
 import { v4 as uuidv4 } from "uuid";
 
-let countries: Country[] = sampleData.countries || [];
 
 export const countryResolvers = {
   // Get a single country by ID
@@ -23,22 +22,28 @@ export const countryResolvers = {
       return rows[0];
     },
     getCountries: async (_: any, __: any, context: any): Promise<Country[]> => {
-      if (!context.user) {
-        throw new Error("Unauthorized: Please log in.");
+      // if (!context.user) {
+      //   throw new Error("Unauthorized: Please log in.");
+      // }
+      try {
+        const [rows] = await context.db.query("SELECT * FROM countries");
+        if (rows.length === 0) {
+          throw new Error("No countries found.");
+        }
+        // Return all countries
+        return rows;
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+        throw new Error("Failed to fetch countries.");
       }
-      const [rows] = context.db.query("SELECT * FROM countries");
-      if (rows.length === 0) {
-        throw new Error("No countries found.");
-      }
-      // Return all countries
-      return rows;
+
     }
   },
   Mutation: {
     createCountry: async (_: any, { name, code }: { name: string; code: string }, context: any): Promise<Country> => {
-      if (!context.user) {
-        throw new Error("Unauthorized: Please log in.");
-      }
+      // if (!context.user) {
+      //   throw new Error("Unauthorized: Please log in.");
+      // }
       if (!name || !code) {
         throw new Error("Name and code are required to create a country.");
       }
@@ -52,7 +57,7 @@ export const countryResolvers = {
         id: uuidv4(),
         name,
         code,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date(),
         createdBy: "system" // This can be modified to include the actual creator's ID
       };
       // Insert the new country into the database
@@ -67,7 +72,7 @@ export const countryResolvers = {
       return newCountry;
     },
 
-    updateCountry: async(_: any, { id, name, code }: { id: string; name?: string; code?: string }, context: any): Promise<Country | null> => {
+    updateCountry: async (_: any, { id, name, code }: { id: string; name?: string; code?: string }, context: any): Promise<Country | null> => {
       if (!context.user) {
         throw new Error("Unauthorized: Please log in.");
       }
@@ -84,7 +89,7 @@ export const countryResolvers = {
       }
       // Update the country in the database
       const update = await context.db.query("UPDATE countries SET name = ?, code = ? WHERE id = ?", [name, code, id]);
-      
+
       if (update.affectedRows === 0) {
         throw new Error(`Failed to update country with ID ${id}.`);
       }
@@ -98,7 +103,7 @@ export const countryResolvers = {
       };
     },
 
-    deleteCountry: async(_: any, { id }: { id: string }, context: any): Promise<Country | null> => {
+    deleteCountry: async (_: any, { id }: { id: string }, context: any): Promise<Country | null> => {
       if (!context.user) {
         throw new Error("Unauthorized: Please log in.");
       }
@@ -107,8 +112,8 @@ export const countryResolvers = {
       }
       // Check if the country exists
       const [existingCountries] = await context.db.query("SELECT * FROM countries WHERE id = ?", [id]);
-      if (existingCountries.length === 0) { 
-        throw new Error(`Country with ID ${id} does not exist.`);   
+      if (existingCountries.length === 0) {
+        throw new Error(`Country with ID ${id} does not exist.`);
       }
       // Delete the country from the database
       await context.db.query("DELETE FROM countries WHERE id = ?", [id]);

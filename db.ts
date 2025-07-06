@@ -16,7 +16,7 @@ const sampleData = {
       id: "c1",
       name: "Nigeria",
       code: "NG",
-      createdAt: now,
+      createdAt: new Date(),
       createdBy: "system"
     }
   ],

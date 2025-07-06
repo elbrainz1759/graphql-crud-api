@@ -15,10 +15,10 @@ import { schoolResolvers } from './src/resolvers/schoolResolvers';
 import { stateResolvers } from './src/resolvers/stateResolvers';
 import { roleResolvers } from './src/resolvers/roleResolvers';
 import { userResolvers } from './src/resolvers/userResolvers';
-import sampleData from './db';
 import { getLoggedInUser } from './src/middleware/isLoggedIn';
 import { authType } from './src/types/auth';
 import { authResolvers } from './src/resolvers/authResolvers';
+import { db } from './src/startup/mysql';
 
 const typeDefs = [
     countryType,
@@ -51,12 +51,7 @@ app.use("/graphql", graphqlHTTP(
             graphiql: true,
             context: {
                 user,
-                schools: sampleData.schools || [],
-                users: sampleData.users || [],
-                states: sampleData.states || [],
-                countries: sampleData.countries || [],
-                roles: sampleData.roles || [],
-                permissions: sampleData.permissions || [],
+                db,
             },
         };
     }

@@ -17,8 +17,8 @@ export const countryType = `
     createCountry(
       name: String!,
       code: String!,
-      createdBy: String!,
-      createdAt: String!
+      createdBy: String,
+      createdAt: String
     ): Country
     updateCountry(
       id: ID!,
