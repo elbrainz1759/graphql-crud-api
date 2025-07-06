@@ -4,7 +4,6 @@ export const roleType = `
     id: ID!
     name: String!
     description: String!
-    permissions: [String!]!
     createdAt: String!
     createdBy: String!
   }
@@ -15,8 +14,8 @@ export const roleType = `
   }
 
   type Mutation {
-    createRole(name: String!, description: String!, permissions: [String!]!, createdBy: String!, createdAt: String!): Roles
-    updateRole(id: ID!, name: String, description: String, permissions: [String!]): Roles
+    createRole(name: String!, description: String!, createdBy: String!, createdAt: String!): Roles
+    updateRole(id: ID!, name: String, description: String): Roles
     deleteRole(id: ID!): Roles
   }
 `;
