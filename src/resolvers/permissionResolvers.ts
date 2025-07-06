@@ -1,58 +1,65 @@
-import sampleData from "../../db";
 import { Permission } from "../interfaces/interface";
 import { v4 as uuidv4 } from "uuid";
 
-let permissions: Permission[] = sampleData.permissions || [];
 
 export const permissionResolvers = {
     // Resolve into Query and Mutation types
     Query: {
-        getPermission: (_: any, { id }: { id: string }, context: any): Permission | undefined => {
-            if (!context.user) {
-                throw new Error("Unauthorized: Please log in.");
-            }
+        getPermission: async(_: any, { id }: { id: string }, context: any): Promise<Permission[]> => {
+            // if (!context.user) {
+            //     throw new Error("Unauthorized: Please log in.");
+            // }
             if (!id) {
                 throw new Error("Permission ID is required.");
             }
-            if (!permissions) {
-                throw new Error("Permissions data is not available in the context.");
-            }
             // Find and return the permission by ID
-            return permissions.find(p => p.id === id);
-        },
-        getPermissions: (context: any): Permission[] => {
-            if (!context.user) {
-                throw new Error("Unauthorized: Please log in.");
+            const permission = await context.db.query("SELECT * FROM permissions WHERE id = ?", [id]);
+            if (permission.length === 0) {
+                throw new Error(`Permission with ID ${id} does not exist.`);
             }
-            return permissions;
+            // Return the permission object
+            return permission[0];
+        },
+        getPermissions: async(context: any): Promise<Permission[]> => {
+            // if (!context.user) {
+            //     throw new Error("Unauthorized: Please log in.");
+            // }
+            const [rows] = await context.db.query("SELECT * FROM permissions");
+            if (rows.length === 0) {
+                throw new Error("No permissions found.");
+            }
+            // Return all permissions
+            return rows
         },
     },
     Mutation: {
-        createPermission: (_: any, { name, description }: Omit<Permission, "id">, context: any): Permission => {
-            if (!context.user) {
-                throw new Error("Unauthorized: Please log in.");
-            }
+        createPermission: async(_: any, { name, description }: Omit<Permission, "id">, context: any): Promise<Permission> => {
+            // if (!context.user) {
+            //     throw new Error("Unauthorized: Please log in.");
+            // }
             if (!name || !description) {
                 throw new Error("Name and description are required to create a permission.");
             }
-            if (permissions.some(p => p.name === name)) {
+            // Check if the permission already exists
+            const [existingPermissions] = await context.db.query("SELECT * FROM permissions WHERE name = ?", [name]);
+            if (existingPermissions.length > 0) {
                 throw new Error(`Permission with name "${name}" already exists.`);
             }
+
             // Create a new permission object
-            const newPermission: Permission = {
-                id: uuidv4(),
+            const newPermission = await context.db.query("INSERT INTO permissions (id, name, description, createdAt, createdBy) VALUES (?, ?, ?, ?, ?)", [
+                uuidv4(),
                 name,
                 description,
-                createdAt: new Date().toISOString(),
-                createdBy: "system" // This can be modified to include the actual creator's ID
-            };
-            permissions.push(newPermission);
+                new Date().toISOString(),
+                "system" // This can be modified to include the actual creator's ID
+            ]);
             return newPermission;
         },
-        updatePermission: (_: any, { id, name, description }: Partial<Permission> & { id: string }, context: any): Permission | null => {
-            if (!context.user) {
-                throw new Error("Unauthorized: Please log in.");
-            }
+        updatePermission: async(_: any, { id, name, description }: Partial<Permission> & { id: string }, context: any): Promise<Permission | null> => {
+            // if (!context.user) {
+            //     throw new Error("Unauthorized: Please log in.");
+            // }
             if (!id) {
                 throw new Error("Permission ID is required for updating.");
             }
@@ -60,26 +67,57 @@ export const permissionResolvers = {
                 throw new Error("At least one of name or description must be provided for updating a permission.");
             }
             // Find the permission to update
-            const permission = permissions.find(p => p.id === id);
-            if (!permission) return null;
-            if (name) permission.name = name;
-            if (description) permission.description = description;
-            return permission;
-        },
-        deletePermission: (_: any, { id }: { id: string }, context: any): Permission | null => {
-            if (!context.user) {
-                throw new Error("Unauthorized: Please log in.");
+            const [permissions] = await context.db.query("SELECT * FROM permissions WHERE id = ?", [id]);
+            if (permissions.length === 0) {
+                throw new Error(`Permission with ID ${id} does not exist.`);
             }
+            // Update the permission fields
+            const updatedPermission = permissions[0];
+            // Update the fields if provided
+            if (!updatedPermission) {
+                throw new Error(`Permission with ID ${id} does not exist.`);
+            }
+            const permission = await context.db.query("UPDATE permissions SET name = ?, description = ? WHERE id = ?", [
+                name || updatedPermission.name,
+                description || updatedPermission.description,
+                id
+            ]);
+            // If the permission was not found, return null
+            if (permission.length === 0) {
+                return null;
+            }   
+            // Return the updated permission object
+            return {
+                id: permission[0].id,
+                name: permission[0].name,
+                description: permission[0].description,
+                createdAt: permission[0].createdAt,
+                createdBy: permission[0].createdBy
+            };
+        },
+        deletePermission: async(_: any, { id }: Partial<Permission> & { id: string }, context: any): Promise<Permission | null> => {
+            // if (!context.user) {
+            //     throw new Error("Unauthorized: Please log in.");
+            // }
             if (!id) {
                 throw new Error("Permission ID is required for deletion.");
             }
-            if (!permissions.some(p => p.id === id)) {
+            // Check if the permission exists
+            const [permissions] = await context.db.query("SELECT * FROM permissions WHERE id = ?", [id]);
+            // If the permission does not exist, throw an error
+            if (permissions.length === 0) {
                 throw new Error(`Permission with ID ${id} does not exist.`);
             }
-            // Find the index of the permission to delete
-            const index = permissions.findIndex(p => p.id === id);
-            if (index === -1) return null;
-            return permissions.splice(index, 1)[0];
+            // Delete the permission from the database
+            await context.db.query("DELETE FROM permissions WHERE id = ?", [id]);
+            // Return the deleted permission object
+            return {
+                id: permissions[0].id,
+                name: permissions[0].name,
+                description: permissions[0].description,
+                createdAt: permissions[0].createdAt,
+                createdBy: permissions[0].createdBy
+            };
         }
     },
 };
