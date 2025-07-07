@@ -5,6 +5,7 @@ export interface User {
 	createdAt: string;
 	createdBy: string;
 	password?: string;
+	countryId?: string;
 	role?: "user" | "admin" | "superAdmin";
 }
 
