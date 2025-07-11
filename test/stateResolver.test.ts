@@ -1,4 +1,4 @@
-import { stateResolvers } from "../resolvers/stateResolvers";
+import { stateResolvers } from "../src/resolvers/stateResolvers"
 
 describe("State Resolvers", () => {
     const mockStates = [
@@ -12,7 +12,6 @@ describe("State Resolvers", () => {
 
     it("returns state by ID", () => {
         const result = stateResolvers.Query.getState(
-            null,
             { id: "1" },
             mockContext
         );
@@ -22,7 +21,6 @@ describe("State Resolvers", () => {
 
     it("returns undefined for non-existing state", () => {
         const result = stateResolvers.Query.getState(
-            null,
             { id: "3" },
             mockContext
         );
@@ -31,7 +29,7 @@ describe("State Resolvers", () => {
     });
 
     it("returns all states", () => {
-        const result = stateResolvers.Query.getStates(null, null, mockContext);
+        const result = stateResolvers.Query.getStates(mockContext);
 
         expect(result).toEqual(mockStates);
     });
