@@ -1,7 +1,12 @@
 // schoolResolvers.test.ts
 import { schoolResolvers } from "../src/resolvers/schoolResolvers";
 
+// Resolvers for School entity
 describe("School Resolvers", () => {
+    // Mock data for schools
+    // This data simulates a database or data source
+    // In a real application, this would be replaced with actual database queries
+    // or API calls to fetch the schools.
     const mockSchools = [
         { id: "1", name: "Alpha School" },
         { id: "2", name: "Beta School" }
@@ -10,6 +15,7 @@ describe("School Resolvers", () => {
     const mockContext = {
         schools: mockSchools
     };
+    // Mocking the context to simulate a database or data source
 
     it("returns school by ID", () => {
         const result = schoolResolvers.Query.getSchool(
@@ -20,7 +26,7 @@ describe("School Resolvers", () => {
 
         expect(result).toEqual({ id: "1", name: "Alpha School" });
     });
-
+// Test for non-existing school
     it("returns undefined for non-existing school", () => {
         const result = schoolResolvers.Query.getSchool(
             null,
@@ -30,12 +36,14 @@ describe("School Resolvers", () => {
 
         expect(result).toBeUndefined();
     });
+// Test for getting all schools
 
     it("returns all schools", () => {
         const result = schoolResolvers.Query.getSchools(null, null, mockContext);
 
         expect(result).toEqual(mockSchools);
     });
+    // Test for getting schools by state, country, and createdBy
     it("returns schools by state", () => {
         const mockSchoolsByState = [
             { id: "1", name: "Alpha School", state: "California" },
@@ -51,6 +59,7 @@ describe("School Resolvers", () => {
 
         expect(result).toEqual(mockSchoolsByState);
     });
+    // Test for getting schools by country
     it("returns schools by country", () => {
         const mockSchoolsByCountry = [
             { id: "1", name: "Alpha School", country: "USA" },
@@ -66,6 +75,7 @@ describe("School Resolvers", () => {
 
         expect(result).toEqual(mockSchoolsByCountry);
     });
+    // Test for getting schools by createdBy
     it("returns schools by createdBy", () => {
         const mockSchoolsByCreator = [
             { id: "1", name: "Alpha School", createdBy: "admin" },
