@@ -13,7 +13,7 @@ export interface Class {
 	id: string;
 	name: string;
 	schoolId: string;
-	createdAt: string;
+	createdAt: Date;
 	createdBy: string;
 }
 

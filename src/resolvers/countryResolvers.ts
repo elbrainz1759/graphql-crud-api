@@ -1,4 +1,3 @@
-import sampleData from "../../db";
 import { Country } from "../interfaces/interface";
 import { v4 as uuidv4 } from "uuid";
 
