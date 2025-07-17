@@ -1,6 +1,6 @@
 # GraphQL CRUD API (Node.js + Express + TypeScript)
 
-This is a simple GraphQL CRUD API built with Node.js, Express, and TypeScript. Basic user management operations: create, read, update, and delete.
+This is a simple GraphQL CRUD API built with Node.js, Express, and TypeScript. Basic user management operations: create, read, update, and delete. Test cases for all resolvers
 
 ---
 
