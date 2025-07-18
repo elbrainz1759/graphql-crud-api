@@ -71,4 +71,14 @@ describe("Student Resolvers", () => {
         ]));
     });
 
+        // Test for deleting a student that does not exist
+    it("throws an error when deleting a non-existent student", async () => {
+        await expect(studentResolvers.Mutation.deleteStudent({ id: "non-existent-id" }, mockContext)).rejects.toThrow("Student with ID non-existent-id does not exist.");
+    });
+
+        // Test for updating a student that does not exist
+    it("throws an error when updating a non-existent student", async () => {
+        await expect(studentResolvers.Mutation.updateStudent({ id: "non-existent-id", name: "Updated Name" }, mockContext)).rejects.toThrow("Student with ID non-existent-id does not exist.");
+    });
+
 });
