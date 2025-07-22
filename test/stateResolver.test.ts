@@ -41,4 +41,25 @@ describe("State Resolvers", () => {
 
         expect(result).toEqual(mockStates);
     });
+
+    // Test for creating a state
+    it("creates a state", async () => {
+        const newState = await stateResolvers.Mutation.createState(
+            { name: "Florida", countryId: "US", createdBy: "system" , createdAt: new Date().toISOString() },
+            mockContext
+        );
+        expect(newState).toEqual(
+            expect.objectContaining({ id: expect.any(String), name: "Florida" })
+        );
+    });
+    // Test for updating a state
+    it("updates a state", async () => {
+        const updatedState = await stateResolvers.Mutation.updateState(
+            { id: "1", name: "California Updated" },
+            mockContext
+        );
+        expect(updatedState).toEqual(
+            expect.objectContaining({ id: "1", name: "California Updated" })
+        );
+    });
 });
