@@ -62,4 +62,10 @@ describe("State Resolvers", () => {
             expect.objectContaining({ id: "1", name: "California Updated" })
         );
     });
+    // Test for deleting a state
+    it("deletes a state", async () => {
+        const result = await stateResolvers.Mutation.deleteState({ id: "1" }, mockContext);
+        expect(result).toBe(true);
+        expect(mockStates.find(state => state.id === "1")).toBeUndefined();
+    });
 });
