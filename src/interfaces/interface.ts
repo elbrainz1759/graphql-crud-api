@@ -9,6 +9,15 @@ export interface User {
 	role?: "user" | "admin" | "superAdmin";
 }
 
+export interface schoolAdmin {
+	id: string;
+	name: string;
+	email: string;
+	schoolId: string;
+	createdAt: string;
+	createdBy: string;
+}
+
 export interface Teacher {
 	id: string;
 	name: string;
