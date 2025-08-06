@@ -18,7 +18,10 @@ import { userResolvers } from './src/resolvers/userResolvers';
 import { getLoggedInUser } from './src/middleware/isLoggedIn';
 import { authType } from './src/types/auth';
 import { authResolvers } from './src/resolvers/authResolvers';
+
 import { db } from './src/startup/mysql';
+import { schoolAdminType } from './src/types/schoolAdminType';
+import { schoolAdminResolvers } from './src/resolvers/schoolAdminResolvers';
 
 const typeDefs = [
     countryType,
@@ -26,7 +29,8 @@ const typeDefs = [
     stateType,
     roleType,
     userType,
-    authType
+    authType,
+    schoolAdminType
 ];
 
 const resolvers = [
@@ -35,7 +39,8 @@ const resolvers = [
     stateResolvers,
     roleResolvers,
     userResolvers,
-    authResolvers
+    authResolvers,
+    schoolAdminResolvers
 ];
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
