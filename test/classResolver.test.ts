@@ -40,7 +40,7 @@ describe("Class Resolvers", () => {
         expect(newClass).toEqual(
             expect.objectContaining({ id: "new-id", name: "History 101", schoolId: "school-1", createdBy: "user-1", createdAt: expect.any(String) })
         );
-    }
+    })
 
 
 })
