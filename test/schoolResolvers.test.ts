@@ -97,7 +97,17 @@ describe("School Resolvers", () => {
         const result = schoolResolvers.Mutation.createSchool(
             null,
             newSchool,
-            mockContext
+            mockContext,
+            {
+                name: "Gamma School",
+                address: "123 Main St",
+                country: "USA",
+                phone: "123-456-7890",
+                website: "www.gammaschool.com",
+                state: "California",
+                createdBy: "admin",
+                createdAt: new Date().toISOString()
+            }
         );
 
         expect(result).toHaveProperty("id");
