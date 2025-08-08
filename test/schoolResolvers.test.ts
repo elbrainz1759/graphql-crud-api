@@ -91,4 +91,19 @@ describe("School Resolvers", () => {
 
         expect(result).toEqual(mockSchoolsByCreator);
     });
+    // Test for creating a school
+    it("creates a new school", () => {
+        const newSchool = { name: "Gamma School", state: "California", country: "USA", createdBy: "admin" };
+        const result = schoolResolvers.Mutation.createSchool(
+            null,
+            newSchool,
+            mockContext
+        );
+
+        expect(result).toHaveProperty("id");
+        expect(result.name).toBe(newSchool.name);
+        expect(result.state).toBe(newSchool.state);
+        expect(result.country).toBe(newSchool.country);
+        expect(result.createdBy).toBe(newSchool.createdBy);
+    });
 });
